@@ -20,5 +20,21 @@
   "bugs": {
     "url": "https://github.com/gyungdal/discord-haksu-bot/issues"
   },
-  "homepage": "https://github.com/gyungdal/discord-haksu-bot#readme"
+  "homepage": "https://github.com/gyungdal/discord-haksu-bot#readme",
+  "dependencies": {
+    "@types/node": "^12.12.7",
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "inversify": "^5.0.1",
+    "reflect-metadata": "^0.1.13",
+    "typescript": "^3.7.2"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.4",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "mocha": "^6.2.2",
+    "ts-mockito": "^2.5.0",
+    "ts-node": "^8.5.0"
+  }
 }
