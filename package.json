@@ -1,0 +1,24 @@
+{
+  "name": "haksu-bot",
+  "version": "0.0.1",
+  "description": "Discord Haksu Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/gyungdal/discord-haksu-bot.git"
+  },
+  "keywords": [
+    "Discord",
+    "GPU",
+    "TensorFlow"
+  ],
+  "author": "Gyeongsik Kim",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gyungdal/discord-haksu-bot/issues"
+  },
+  "homepage": "https://github.com/gyungdal/discord-haksu-bot#readme"
+}
