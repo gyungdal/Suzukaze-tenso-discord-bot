@@ -1,14 +1,14 @@
 {
-  "name": "haksu-bot",
+  "name": "suzukaze-tenso-discord-bot",
   "version": "0.0.1",
-  "description": "Discord Haksu Bot",
+  "description": "Suzukaze Tenso Discord Bot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/gyungdal/discord-haksu-bot.git"
+    "url": "git@github.com:gyungdal/Suzukaze-tenso-discord-bot.git"
   },
   "keywords": [
     "Discord",
