@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Client } from "discord.js";
+import { Client, Collection } from "discord.js";
 const client = new Client();
 
 client.on('ready', () => {
