@@ -1,3 +1,5 @@
+import { Message } from "discord.js";
+
 export interface ILoggerMethod {
     (msg: string, ...args: any[]): void
     (obj: object, msg?: string, ...args: any[]): void
@@ -35,7 +37,7 @@ export interface IBot {
 export interface IBotCommand {
     getHelp(): IBotCommandHelp
     init(bot: IBot, dataPath: string): void
-    isValid(msg: string): boolean
+    isValid(msg: Message): boolean
     process(msg: string, answer: IBotMessage): Promise<void>
 }
 
