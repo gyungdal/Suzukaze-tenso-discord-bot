@@ -1,9 +1,9 @@
 import { IBot, ICommand, IMessage, ICommandDescription } from "../struct/api";
 import { Message } from "discord.js";
-import { BotMessage } from "../message";
+import { BotMessage } from "../struct/message";
 export class Ping implements ICommand {
     init(bot: IBot, dataPath: string): void {
-
+        
     }
 
     getHelp(): ICommandDescription {

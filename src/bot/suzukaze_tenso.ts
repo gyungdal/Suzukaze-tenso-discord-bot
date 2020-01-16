@@ -1,15 +1,35 @@
 import 'dotenv/config';
-import { Client } from "discord.js";
-import { IBot, ICommand, IConfig, IMessage, ILogger } from "../api";
-import { BotMessage } from "../message";
+import { Client, MessageEmbedImage } from "discord.js";
+import { IBot, ICommand, IConfig, IMessage, ILogger, ICommandDescription } from "../struct/api";
+import { BotMessage } from "../struct/message";
 import { resolve } from "path";
 
 export class SuzukazeTenso implements IBot {
-    private _commands: ICommand[] = [];
-    private client: Client
-    private config: IConfig
-    private _logger: ILogger
-    private botId: string
+    private client: Client;
+    private config: IConfig;
+    private _logger: ILogger;
+    
+    _commands: ICommand[] = [];
+    botId : string;
+    
+    constructor(){
+        this.botId = "";
+        this.client = new Client();
+        this._logger = {
+            debug : console.debug,
+            error : console.error,
+            warn : console.warn,
+            info : console.log
+        };
+        this.config = {
+            token : "",
+            commands : [],
+            game : "",
+            userName : "",
+            denyUsers : new String(process.env.DENY_USER).split(",") || [],
+            denyAnswer : process.env.DENY_ANSWER || "NOP"
+        };
+    }
     public get commands(): ICommand[] {
         return this._commands;
     }
@@ -39,8 +59,6 @@ export class SuzukazeTenso implements IBot {
             throw new Error('invalid discord token');
         }
 
-        this.client = new Client();
-
         this.client.on('ready', () => {
             this.botId = this.client.user.id;
             if (this.config.game) {
@@ -51,7 +69,7 @@ export class SuzukazeTenso implements IBot {
             }
             this.client.user.setStatus('online');
             this.logger.info('started...');
-        })
+        });
 
         this.client.on('message', async (message) => {
             if (message.author.id !== this.botId) {
@@ -61,15 +79,21 @@ export class SuzukazeTenso implements IBot {
                     try {
                         if (cmd.isValid(message)) {
                             const answer = new BotMessage(message.author);
-                            if (!this.config.denyUsers || !this.config.denyUsers.includes(message.author.id)) {
-                                await cmd.process(text, answer);
+                            if (!this.config.denyUsers.includes(message.author.id)) {
+                                message.reply(this.config.denyAnswer);
                             } else {
                                 if (this.config.denyAnswer) {
                                     answer.setTextOnly(this.config.denyAnswer);
                                 }
                             }
                             if (answer.isValid()) {
-                                message.reply(answer.text || { embed: answer.richText });
+                                cmd.process(message).then((success)=>{
+                                    message.reply(success.isOnlyText 
+                                        ? success.text 
+                                        : { embed: success.richText});
+                                }, (reject)=>{
+                                    message.reply(reject);
+                                })
                             }
                             break;
                         }
@@ -79,9 +103,10 @@ export class SuzukazeTenso implements IBot {
                     }
                 }
             }
-        })
+        });
 
         this.client.login(this.config.token);
+        
     }
 
     private loadCommands(commandsPath: string, dataPath: string) {

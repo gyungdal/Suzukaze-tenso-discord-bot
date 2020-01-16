@@ -1,11 +1,11 @@
 import { RichEmbed, User } from 'discord.js'
-import { IMessage } from './struct/api'
+import { IMessage } from './api'
 
 export class BotMessage implements IMessage {
     public readonly user: User;
     public readonly isOnlyText: boolean;
-    private richText: RichEmbed;
-    private text: string;
+    public richText: RichEmbed;
+    public text: string;
 
     constructor(user: User, isOnlyText : boolean = false) {
         this.user = user;

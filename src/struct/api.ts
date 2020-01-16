@@ -1,4 +1,4 @@
-import { Message, User } from "discord.js";
+import { Message, User, RichEmbed } from "discord.js";
 
 export interface ILoggerMethod {
     (msg: string, ...args: any[]): void
@@ -28,6 +28,7 @@ export interface ICommandDescription {
 }
 
 export interface IBot {
+    botId : string;
     readonly commands: ICommand[];
     readonly logger: ILogger;
     readonly allUsers: IUser[];
@@ -36,7 +37,7 @@ export interface IBot {
 }
 
 export interface ICommand {
-    readonly getHelp: ICommandDescription;
+    getHelp(): ICommandDescription;
     init(bot: IBot, dataPath: string): void;
     isValid(msg: Message): boolean;
     process(msg: Message): Promise<IMessage>;
@@ -57,6 +58,9 @@ type MessageColor =
 export interface IMessage {
     readonly user: User;
     readonly isOnlyText : boolean;
+    richText: RichEmbed;
+    text: string;
+
     setTextOnly(text: string): IMessage;
     addField(name: string, value: string): IMessage;
     addBlankField(): IMessage;

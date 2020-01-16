@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { Client } from "discord.js";
-import { IBot, ICommand, IMessage, ILogger } from "./api";
+import { IBot, ICommand, IMessage, ILogger } from "./struct/api";
 import { BotMessage } from "./message";
 
 export class SuzukazeTenso implements IBot {
@@ -92,4 +92,3 @@ export class SuzukazeTenso implements IBot {
         }
     }
 }
-client.login(process.env.DISCORD_SECRET);
