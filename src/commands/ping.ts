@@ -1,23 +1,26 @@
-import { IBot, IBotCommand, IBotMessage, IBotCommandHelp } from "../api";
+import { IBot, ICommand, IMessage, ICommandDescription } from "../struct/api";
 import { Message } from "discord.js";
-export class Ping implements IBotCommand {
-    getHelp(): IBotCommandHelp {
-        return { 
-            caption: '테스트', 
-            description: '대충 핑퐁' 
-        }
-    }
+import { BotMessage } from "../message";
+export class Ping implements ICommand {
     init(bot: IBot, dataPath: string): void {
 
     }
 
+    getHelp(): ICommandDescription {
+        return { 
+            type: "테스트", 
+            command : "ping",
+            desc: '대충 핑퐁' 
+        }
+    }
+    
     isValid(msg: Message): boolean {
         return msg.content.toLowerCase() == "ping";
     }
 
-    async process(msg: string, answer: IBotMessage): Promise<void> {
-        answer.setTextOnly("Pong");
+    process(msg: Message): Promise<IMessage> {
+        const message = new BotMessage(msg.author, true);
+        message.setTextOnly("Pong");
+        return Promise.resolve(message);
     }
-
-
 }
