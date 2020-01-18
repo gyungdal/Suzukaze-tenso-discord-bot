@@ -4,7 +4,7 @@
   "description": "Suzukaze Tenso Discord Bot",
   "main": "index.js",
   "scripts": {
-    "start" : "ts-node src/index.ts"
+    "start": "ts-node src/index.ts"
   },
   "repository": {
     "type": "git",
@@ -23,19 +23,19 @@
   "homepage": "https://github.com/gyungdal/discord-haksu-bot#readme",
   "dependencies": {
     "@types/dotenv": "^8.2.0",
-    "@types/node": "^12.12.7",
+    "@types/node": "^12.12.25",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "inversify": "^5.0.1",
     "reflect-metadata": "^0.1.13",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.5"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.4",
+    "@types/chai": "^4.2.7",
     "@types/mocha": "^5.2.7",
     "chai": "^4.2.0",
     "mocha": "^6.2.2",
     "ts-mockito": "^2.5.0",
-    "ts-node": "^8.5.0"
+    "ts-node": "^8.6.2"
   }
 }
