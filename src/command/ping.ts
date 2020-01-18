@@ -2,50 +2,54 @@ import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../s
 import { Message } from "discord.js";
 import { BotMessage } from "../struct/message";
 export class Ping implements ICommand {
-    public readonly bot : IBot;
-    constructor(bot : IBot){
+    public readonly bot: IBot;
+    constructor(bot: IBot) {
         this.bot = bot;
     }
 
     getHelp(): ICommandDescription {
-        return { 
-            type: CommandType.TEST, 
-            command : "ping",
-            desc: '대충 핑퐁' 
+        return {
+            type: CommandType.TEST,
+            command: "ping",
+            desc: '핑퐁'
         }
     }
-    
+
     isValid(msg: Message): boolean {
-        if(msg.mentions.users.has(this.bot.botId)){
-            return msg.content.split(' ')[1].toLowerCase() == "ping";
+        if (msg.mentions.users.has(this.bot.config.id)) {
+            const check = msg.content.split(' ')[1].toLowerCase()
+                        .includes(this.getHelp().command);
+            this.bot.logger.info(`${this.getHelp().command} : ${check}`);
+            return check;
         }
         return false;
     }
 
     process(msg: Message): Promise<Boolean> {
         const message = new BotMessage(msg);
-        message.setTitle("Execute");
+        message.setTitle(this.getHelp().desc);
         message.setDescription("Pong!");
         return message.sendReply()
-            .then((resolve)=>{
-                setTimeout(()=>{
+            .then((resolve) => {
+                setTimeout(() => {
                     //array인지 체크
-                    if(Array.isArray(resolve)){
-                        const sendMessages : Message[] = resolve as Message[];
+                    if (Array.isArray(resolve)) {
+                        const sendMessages: Message[] = resolve as Message[];
                         sendMessages.forEach(value => {
-                            if(value.deletable){
+                            if (value.deletable) {
                                 value.delete();
                             }
                         });
-                    }else{
-                        const sendMessage : Message = resolve as Message;
-                        if(sendMessage.deletable){
+                    } else {
+                        const sendMessage: Message = resolve as Message;
+                        if (sendMessage.deletable) {
                             sendMessage.delete();
                         }
                     }
+                    message.removeRecvMessage();
                 }, 1000 * 10);
                 return Promise.resolve(true);
-            }, (reject)=>{
+            }, (reject) => {
                 return Promise.reject(reject);
             });
     }

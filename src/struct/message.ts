@@ -18,6 +18,14 @@ export class BotMessage implements IMessage {
         return this.recvMessage.channel.send({embed : this.richText});
     }
 
+    public removeRecvMessage() : Promise<Boolean> {
+        if(this.recvMessage.deletable){
+            this.recvMessage.delete();
+            return Promise.resolve(true);
+        }else{
+            return Promise.reject("Can't remove recv message");
+        }
+    }
     public isValid(): boolean {
         return this.richText.title != undefined;
     }

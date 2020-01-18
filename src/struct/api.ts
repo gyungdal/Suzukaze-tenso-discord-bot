@@ -13,26 +13,27 @@ export interface ILogger {
 }
 
 export interface IConfig {
-    id : string;
-    token : string;
-    commands : string[];
-    game : string;
-    userName : string;
-    denyAnswer : string;
+    id: string;
+    token: string;
+    commands: string[];
+    game: string;
+    userName: string;
+    denyAnswer: string;
 }
 
-export enum CommandType{
+export enum CommandType {
     ADMIN = "Admin",
-    TEST = "Test" 
+    TEST = "Test",
+    HELP = "Help"
 };
 export interface ICommandDescription {
-    type : CommandType;
-    command : string;
-    desc : string;
+    type: CommandType;
+    command: string;
+    desc: string;
 }
 
 export interface IBot {
-    botId : string;
+    config : IConfig;
     readonly commands: Array<ICommand>;
     readonly logger: ILogger;
     readonly allUsers: IUser[];
@@ -41,7 +42,7 @@ export interface IBot {
 }
 
 export interface ICommand {
-    readonly bot : IBot;
+    readonly bot: IBot;
     getHelp(): ICommandDescription;
     isValid(msg: Message): boolean;
     process(msg: Message): Promise<Boolean>;
@@ -61,10 +62,11 @@ type MessageColor =
 
 export interface IMessage {
     readonly recvMessage: Message;
-    richText: RichEmbed;
+    readonly richText: RichEmbed;
 
-    sendReply() : Promise<(Message|Array<Message>)>;
-    sendChannel() : Promise<(Message|Array<Message>)>;
+    removeRecvMessage() : Promise<Boolean>;
+    sendReply(): Promise<(Message | Array<Message>)>;
+    sendChannel(): Promise<(Message | Array<Message>)>;
     addField(name: string, value: string): IMessage;
     addBlankField(): IMessage;
     setColor(color: MessageColor): IMessage;

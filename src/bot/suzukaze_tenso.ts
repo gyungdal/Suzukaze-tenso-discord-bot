@@ -5,19 +5,17 @@ import { IBot, ICommand, IConfig, IMessage, ILogger, ICommandDescription } from 
 import { readdirSync } from "fs";
 
 export class SuzukazeTenso implements IBot {
-    private client: Client;
-    private config: IConfig;
-    private _logger: ILogger;
+    client: Client;
+    config: IConfig;
+    logger: ILogger;
 
-    _commands: Array<ICommand>;
-    botId: string;
+    commands: Array<ICommand>;
 
     constructor() {
         dotenv.config({ path: join(__dirname, '.env.suzukaze_tenso') });
-        this._commands = new Array();
-        this.botId = "";
+        this.commands = new Array();
         this.client = new Client();
-        this._logger = {
+        this.logger = {
             debug: console.debug,
             error: console.error,
             warn: console.warn,
@@ -32,13 +30,6 @@ export class SuzukazeTenso implements IBot {
             denyAnswer: process.env.DENY_ANSWER || "NOP"
         };
     }
-    public get commands(): ICommand[] {
-        return this._commands;
-    }
-
-    public get logger(): ILogger {
-        return this._logger;
-    }
 
     public get allUsers() {
         return this.client
@@ -51,8 +42,8 @@ export class SuzukazeTenso implements IBot {
     }
 
 
-    public start(logger: ILogger = this._logger, config: IConfig = this.config) {
-        this._logger = logger;
+    public start(logger: ILogger = this.logger, config: IConfig = this.config) {
+        this.logger = logger;
         this.config = config;
         
         if (!this.config.token) {
@@ -60,7 +51,7 @@ export class SuzukazeTenso implements IBot {
         }
 
         this.client.on('ready', () => {
-            this.botId = this.client.user.id;
+            this.config.id = this.client.user.id;
 
             this.loadCommands(`${__dirname}/../command`);
             if (this.config.game) {
@@ -82,9 +73,9 @@ export class SuzukazeTenso implements IBot {
                 if (command !== undefined) {
                     command.process(message)
                         .then((success) => {
-                            this.logger.debug("message process done");
+                            this.logger.debug(`${command.getHelp().command} Execute Done`);
                         }, (reject) => {
-                            this.logger.error(reject);
+                            this.logger.error(`${command.getHelp().command} Execute Error\n\tㄴ${reject}`);
                         })
                 }
             }
@@ -94,9 +85,9 @@ export class SuzukazeTenso implements IBot {
 
     }
 
-    private loadCommands(commandsPath: string) {
-        while (this._commands.length > 0) {
-            this._commands.pop();
+    public loadCommands(commandsPath: string) {
+        while (this.commands.length > 0) {
+            this.commands.pop();
         }
         this.logger.debug(commandsPath);
         const cmdList = readdirSync(commandsPath);
@@ -109,8 +100,8 @@ export class SuzukazeTenso implements IBot {
                 const cmdClass = require(cmdName);
                 this.logger.info(cmdClass);
                 Object.keys(cmdClass).forEach((key)=>{
-                    const command = new cmdClass[key](this.client.user.id) as ICommand;
-                    this._commands.push(command);
+                    const command = new cmdClass[key](this) as ICommand;
+                    this.commands.push(command);
                     this.logger.info(`command "${cmdName}" loaded...`);
                 });
             });
