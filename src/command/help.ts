@@ -1,7 +1,8 @@
 import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../struct/api";
 import { Message } from "discord.js";
 import { BotMessage } from "../struct/message";
-export class Ping implements ICommand {
+
+export class Help implements ICommand {
     public readonly bot : IBot;
     constructor(bot : IBot){
         this.bot = bot;
@@ -10,13 +11,13 @@ export class Ping implements ICommand {
     getHelp(): ICommandDescription {
         return { 
             type: CommandType.TEST, 
-            command : "ping",
-            desc: '대충 핑퐁' 
+            command : "help",
+            desc: '테스트' 
         }
     }
     
     isValid(msg: Message): boolean {
-        if(msg.mentions.users.has(this.bot.botId)){
+        if(msg.mentions.users.has(this.botId)){
             return msg.content.split(' ')[1].toLowerCase() == "ping";
         }
         return false;

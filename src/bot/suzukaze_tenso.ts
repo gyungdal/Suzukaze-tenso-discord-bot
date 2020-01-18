@@ -78,7 +78,7 @@ export class SuzukazeTenso implements IBot {
                 this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
                 const command = this.commands
                         .find((command) => command.isValid(message));
-                        
+
                 if (command !== undefined) {
                     command.process(message)
                         .then((success) => {

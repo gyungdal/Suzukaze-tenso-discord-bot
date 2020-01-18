@@ -21,8 +21,12 @@ export interface IConfig {
     denyAnswer : string;
 }
 
+export enum CommandType{
+    ADMIN = "Admin",
+    TEST = "Test" 
+};
 export interface ICommandDescription {
-    type : string;
+    type : CommandType;
     command : string;
     desc : string;
 }
@@ -37,7 +41,7 @@ export interface IBot {
 }
 
 export interface ICommand {
-    readonly botId : string;
+    readonly bot : IBot;
     getHelp(): ICommandDescription;
     isValid(msg: Message): boolean;
     process(msg: Message): Promise<Boolean>;
