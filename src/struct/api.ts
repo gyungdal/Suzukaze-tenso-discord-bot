@@ -39,6 +39,8 @@ export interface IBot {
     readonly allUsers: IUser[];
     readonly onlineUsers: IUser[];
     start(logger: ILogger, config: IConfig): void;
+    loadCommands(commandsPath: string): Promise<boolean>;
+    addCommandsInDir(dirPath : string): Promise<boolean>;
 }
 
 export interface ICommand {

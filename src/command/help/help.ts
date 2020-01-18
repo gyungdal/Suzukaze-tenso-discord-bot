@@ -1,6 +1,6 @@
-import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../struct/api";
+import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../../struct/api";
 import { Message } from "discord.js";
-import { BotMessage } from "../struct/message";
+import { BotMessage } from "../../struct/message";
 
 export class Help implements ICommand {
     public readonly bot: IBot;
@@ -59,6 +59,7 @@ export class Help implements ICommand {
                             sendMessage.delete();
                         }
                     }
+                    message.removeRecvMessage();
                 }, 1000 * 10);
                 return Promise.resolve(true);
             }, (reject) => {
