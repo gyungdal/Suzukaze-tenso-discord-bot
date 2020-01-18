@@ -73,10 +73,11 @@ export class SuzukazeTenso implements IBot {
                 if (command !== undefined) {
                     command.process(message)
                         .then((success) => {
-                            this.logger.debug(`${command.getHelp().command} Execute Done`);
+                            this.logger.debug(`${command.help.command} Execute Done`);
                         }, (reject) => {
-                            this.logger.error(`${command.getHelp().command} Execute Error\n\tㄴ${reject}`);
-                        })
+                            this.logger.error(`${command.help.command} Execute Error\n\tㄴ${reject}`);
+                            this.client.destroy();
+                        });
                 }
             }
         });
@@ -86,13 +87,13 @@ export class SuzukazeTenso implements IBot {
     }
 
     public addCommandsInDir(dirPath: string): Promise<boolean> {
-        try{
+        try {
             const fileList = readdirSync(dirPath);
             fileList.forEach((cmdName) => {
                 const file = lstatSync(join(dirPath, cmdName));
-                if(file.isDirectory()){
+                if (file.isDirectory()) {
                     this.addCommandsInDir(join(dirPath, cmdName));
-                }else{
+                } else {
                     cmdName = cmdName.split(".")[0];
                     cmdName = join(dirPath, cmdName);
                     this.logger.debug(cmdName);
@@ -106,7 +107,7 @@ export class SuzukazeTenso implements IBot {
                 }
             });
             return Promise.resolve(true);
-        }catch(e){
+        } catch (e) {
             return Promise.reject(e);
         }
     }
@@ -120,7 +121,7 @@ export class SuzukazeTenso implements IBot {
         this.logger.debug(cmdList);
         if (cmdList.length > 0) {
             return this.addCommandsInDir(commandsPath);
-        }else{
+        } else {
             return Promise.reject("No Commands");
         }
     }

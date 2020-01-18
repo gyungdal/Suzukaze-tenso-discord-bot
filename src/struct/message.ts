@@ -11,18 +11,18 @@ export class BotMessage implements IMessage {
         this.richText.title = undefined;
     }
 
-    public sendReply(): Promise<(Message|Array<Message>)> {
-        return this.recvMessage.reply({embed : this.richText});
+    public sendReply(): Promise<(Message | Array<Message>)> {
+        return this.recvMessage.reply({ embed: this.richText });
     }
-    public sendChannel(): Promise<(Message|Array<Message>)> {
-        return this.recvMessage.channel.send({embed : this.richText});
+    public sendChannel(): Promise<(Message | Array<Message>)> {
+        return this.recvMessage.channel.send({ embed: this.richText });
     }
 
-    public removeRecvMessage() : Promise<Boolean> {
-        if(this.recvMessage.deletable){
+    public removeRecvMessage(): Promise<Boolean> {
+        if (this.recvMessage.deletable) {
             this.recvMessage.delete();
             return Promise.resolve(true);
-        }else{
+        } else {
             return Promise.reject("Can't remove recv message");
         }
     }

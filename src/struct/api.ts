@@ -33,19 +33,18 @@ export interface ICommandDescription {
 }
 
 export interface IBot {
-    config : IConfig;
+    config: IConfig;
     readonly commands: Array<ICommand>;
     readonly logger: ILogger;
     readonly allUsers: IUser[];
     readonly onlineUsers: IUser[];
     start(logger: ILogger, config: IConfig): void;
     loadCommands(commandsPath: string): Promise<boolean>;
-    addCommandsInDir(dirPath : string): Promise<boolean>;
+    addCommandsInDir(dirPath: string): Promise<boolean>;
 }
-
 export interface ICommand {
     readonly bot: IBot;
-    getHelp(): ICommandDescription;
+    readonly help: ICommandDescription;
     isValid(msg: Message): boolean;
     process(msg: Message): Promise<Boolean>;
 }
@@ -66,7 +65,7 @@ export interface IMessage {
     readonly recvMessage: Message;
     readonly richText: RichEmbed;
 
-    removeRecvMessage() : Promise<Boolean>;
+    removeRecvMessage(): Promise<Boolean>;
     sendReply(): Promise<(Message | Array<Message>)>;
     sendChannel(): Promise<(Message | Array<Message>)>;
     addField(name: string, value: string): IMessage;

@@ -8,7 +8,7 @@ export class Help implements ICommand {
         this.bot = bot;
     }
 
-    getHelp(): ICommandDescription {
+    get help(): ICommandDescription {
         return {
             type: CommandType.HELP,
             command: "help",
@@ -19,8 +19,8 @@ export class Help implements ICommand {
     isValid(msg: Message): boolean {
         if (msg.mentions.users.has(this.bot.config.id)) {
             const check = msg.content.split(' ')[1].toLowerCase()
-                        .includes(this.getHelp().command);
-            this.bot.logger.info(`${this.getHelp().command} : ${check}`);
+                            === this.help.command;
+            this.bot.logger.info(`${this.help.command} : ${check}`);
             return check;
         }
         return false;
@@ -29,17 +29,17 @@ export class Help implements ICommand {
     process(msg: Message): Promise<Boolean> {
         const message = new BotMessage(msg);
         const helpMap = new Map();
-        this.bot.commands.forEach((command)=>{
-            const help = command.getHelp();
-            if(helpMap.has(help.type)){
-                const value : String = helpMap.get(help.type);
+        this.bot.commands.forEach((command) => {
+            const help = command.help;
+            if (helpMap.has(help.type)) {
+                const value: String = helpMap.get(help.type);
                 helpMap.set(help.type.toString(), `${value}, ${help.command}`);
-            }else{
+            } else {
                 helpMap.set(help.type.toString(), help.command);
             }
         });
-        message.setTitle(this.getHelp().desc);
-        helpMap.forEach((value, key, map)=>{
+        message.setTitle(this.help.desc);
+        helpMap.forEach((value, key, map) => {
             message.addField(key, value);
         });
         return message.sendReply()

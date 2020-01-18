@@ -1,13 +1,13 @@
-import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../struct/api";
+import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../../struct/api";
 import { Message } from "discord.js";
-import { BotMessage } from "../struct/message";
+import { BotMessage } from "../../struct/message";
 export class Ping implements ICommand {
     public readonly bot: IBot;
     constructor(bot: IBot) {
         this.bot = bot;
     }
 
-    getHelp(): ICommandDescription {
+    get help(): ICommandDescription {
         return {
             type: CommandType.TEST,
             command: "ping",
@@ -18,8 +18,8 @@ export class Ping implements ICommand {
     isValid(msg: Message): boolean {
         if (msg.mentions.users.has(this.bot.config.id)) {
             const check = msg.content.split(' ')[1].toLowerCase()
-                        .includes(this.getHelp().command);
-            this.bot.logger.info(`${this.getHelp().command} : ${check}`);
+                 === this.help.command;
+            this.bot.logger.info(`${this.help.command} : ${check}`);
             return check;
         }
         return false;
@@ -27,7 +27,7 @@ export class Ping implements ICommand {
 
     process(msg: Message): Promise<Boolean> {
         const message = new BotMessage(msg);
-        message.setTitle(this.getHelp().desc);
+        message.setTitle(this.help.desc);
         message.setDescription("Pong!");
         return message.sendReply()
             .then((resolve) => {
