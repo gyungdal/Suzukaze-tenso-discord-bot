@@ -1,85 +1,69 @@
-import { RichEmbed, User } from 'discord.js'
+import { RichEmbed, Message } from 'discord.js'
 import { IMessage } from './api'
 
 export class BotMessage implements IMessage {
-    public readonly user: User;
-    public readonly isOnlyText: boolean;
+    public readonly recvMessage: Message;
     public richText: RichEmbed;
-    public text: string;
 
-    constructor(user: User, isOnlyText : boolean = false) {
-        this.user = user;
-        this.isOnlyText = isOnlyText;
+    constructor(recvMessage: Message) {
+        this.recvMessage = recvMessage;
         this.richText = new RichEmbed();
         this.richText.title = undefined;
-        this.text = "";
+    }
+
+    public sendReply(): Promise<(Message|Array<Message>)> {
+        return this.recvMessage.reply({embed : this.richText});
+    }
+    public sendChannel(): Promise<(Message|Array<Message>)> {
+        return this.recvMessage.channel.send({embed : this.richText});
     }
 
     public isValid(): boolean {
-        if(this.isOnlyText){
-            return this.text.length == 0;
-        }else{
-            return this.richText.title != undefined;
-        }
-    }
-
-    public setTextOnly(text: string): IMessage {
-        if (this.richText) { 
-            throw new Error('one of rich text methods was used');
-        }
-        this.text = text;
-        return this;
+        return this.richText.title != undefined;
     }
 
     public addField(name: string, value: string): IMessage {
-        this.validateRichText().addField(name, value);
+        this.richText.addField(name, value);
         return this;
     }
 
     public addBlankField(): IMessage {
-        this.validateRichText().addBlankField();
+        this.richText.addBlankField();
         return this;
     }
 
     public setColor(color: string | number | [number, number, number]): IMessage {
-        this.validateRichText().setColor(color);
+        this.richText.setColor(color);
         return this;
     }
 
     public setDescription(description: string): IMessage {
-        this.validateRichText().setDescription(description);
+        this.richText.setDescription(description);
         return this;
     }
 
     public setFooter(text: string, icon?: string): IMessage {
-        this.validateRichText().setFooter(text, icon);
+        this.richText.setFooter(text, icon);
         return this;
     }
 
     public setImage(url: string): IMessage {
-        this.validateRichText().setImage(url);
+        this.richText.setImage(url);
         return this;
     }
 
     public setThumbnail(url: string): IMessage {
-        this.validateRichText().setThumbnail(url);
+        this.richText.setThumbnail(url);
         return this;
     }
 
     public setTitle(title: string): IMessage {
-        this.validateRichText().setTitle(title);
+        this.richText.setTitle(title);
         return this;
     }
 
     public setURL(url: string): IMessage {
-        this.validateRichText().setURL(url);
+        this.richText.setURL(url);
         return this;
-    }
-
-    private validateRichText(): RichEmbed {
-        if (this.isOnlyText) { 
-            throw new Error('setTextOnly method was used');
-        }
-        return this.richText;
     }
 }

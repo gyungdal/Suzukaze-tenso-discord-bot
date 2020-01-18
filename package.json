@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/gyungdal/discord-haksu-bot#readme",
   "dependencies": {
+    "@types/dotenv": "^8.2.0",
     "@types/node": "^12.12.7",
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",

@@ -1,4 +1,4 @@
-import { Message, User, RichEmbed } from "discord.js";
+import { Message, RichEmbed } from "discord.js";
 
 export interface ILoggerMethod {
     (msg: string, ...args: any[]): void
@@ -13,11 +13,11 @@ export interface ILogger {
 }
 
 export interface IConfig {
+    id : string;
     token : string;
     commands : string[];
     game : string;
     userName : string;
-    denyUsers : string[];
     denyAnswer : string;
 }
 
@@ -29,18 +29,18 @@ export interface ICommandDescription {
 
 export interface IBot {
     botId : string;
-    readonly commands: ICommand[];
+    readonly commands: Array<ICommand>;
     readonly logger: ILogger;
     readonly allUsers: IUser[];
     readonly onlineUsers: IUser[];
-    start(logger: ILogger, config: IConfig, commandsPath: string, dataPath: string): void;
+    start(logger: ILogger, config: IConfig): void;
 }
 
 export interface ICommand {
+    readonly botId : string;
     getHelp(): ICommandDescription;
-    init(bot: IBot, dataPath: string): void;
     isValid(msg: Message): boolean;
-    process(msg: Message): Promise<IMessage>;
+    process(msg: Message): Promise<Boolean>;
 }
 
 export interface IUser {
@@ -56,12 +56,11 @@ type MessageColor =
     | string;
 
 export interface IMessage {
-    readonly user: User;
-    readonly isOnlyText : boolean;
+    readonly recvMessage: Message;
     richText: RichEmbed;
-    text: string;
 
-    setTextOnly(text: string): IMessage;
+    sendReply() : Promise<(Message|Array<Message>)>;
+    sendChannel() : Promise<(Message|Array<Message>)>;
     addField(name: string, value: string): IMessage;
     addBlankField(): IMessage;
     setColor(color: MessageColor): IMessage;

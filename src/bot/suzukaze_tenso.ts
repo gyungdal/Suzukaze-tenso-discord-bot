@@ -1,33 +1,35 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import { join, dirname } from "path";
 import { Client, MessageEmbedImage } from "discord.js";
 import { IBot, ICommand, IConfig, IMessage, ILogger, ICommandDescription } from "../struct/api";
-import { BotMessage } from "../struct/message";
-import { resolve } from "path";
+import { readdirSync } from "fs";
 
 export class SuzukazeTenso implements IBot {
     private client: Client;
     private config: IConfig;
     private _logger: ILogger;
-    
-    _commands: ICommand[] = [];
-    botId : string;
-    
-    constructor(){
+
+    _commands: Array<ICommand>;
+    botId: string;
+
+    constructor() {
+        dotenv.config({ path: join(__dirname, '.env.suzukaze_tenso') });
+        this._commands = new Array();
         this.botId = "";
         this.client = new Client();
         this._logger = {
-            debug : console.debug,
-            error : console.error,
-            warn : console.warn,
-            info : console.log
+            debug: console.debug,
+            error: console.error,
+            warn: console.warn,
+            info: console.log
         };
         this.config = {
-            token : "",
-            commands : [],
-            game : "",
-            userName : "",
-            denyUsers : new String(process.env.DENY_USER).split(",") || [],
-            denyAnswer : process.env.DENY_ANSWER || "NOP"
+            id : process.env.DISCORD_CLIENT_ID || "NOP",
+            token: process.env.DISCORD_SECRET || "NOP",
+            commands: [],
+            game: "",
+            userName: "",
+            denyAnswer: process.env.DENY_ANSWER || "NOP"
         };
     }
     public get commands(): ICommand[] {
@@ -40,8 +42,8 @@ export class SuzukazeTenso implements IBot {
 
     public get allUsers() {
         return this.client
-        ? this.client.users.array().filter((i) => i.id !== '1') 
-        : [];
+            ? this.client.users.array().filter((i) => i.id !== '1')
+            : [];
     }
 
     public get onlineUsers() {
@@ -49,18 +51,18 @@ export class SuzukazeTenso implements IBot {
     }
 
 
-    public start(logger: ILogger, config: IConfig, commandsPath: string, dataPath: string) {
+    public start(logger: ILogger = this._logger, config: IConfig = this.config) {
         this._logger = logger;
         this.config = config;
-
-        this.loadCommands(commandsPath, dataPath);
-
-        if (!this.config.token) { 
+        
+        if (!this.config.token) {
             throw new Error('invalid discord token');
         }
 
         this.client.on('ready', () => {
             this.botId = this.client.user.id;
+
+            this.loadCommands(`${__dirname}/../command`);
             if (this.config.game) {
                 this.client.user.setGame(this.config.game);
             }
@@ -72,53 +74,46 @@ export class SuzukazeTenso implements IBot {
         });
 
         this.client.on('message', async (message) => {
-            if (message.author.id !== this.botId) {
-                const text = message.cleanContent;
-                this.logger.debug(`[${message.author.tag}] ${text}`);
-                for (const cmd of this.commands) {
-                    try {
-                        if (cmd.isValid(message)) {
-                            const answer = new BotMessage(message.author);
-                            if (!this.config.denyUsers.includes(message.author.id)) {
-                                message.reply(this.config.denyAnswer);
-                            } else {
-                                if (this.config.denyAnswer) {
-                                    answer.setTextOnly(this.config.denyAnswer);
-                                }
-                            }
-                            if (answer.isValid()) {
-                                cmd.process(message).then((success)=>{
-                                    message.reply(success.isOnlyText 
-                                        ? success.text 
-                                        : { embed: success.richText});
-                                }, (reject)=>{
-                                    message.reply(reject);
-                                })
-                            }
-                            break;
-                        }
-                    } catch (ex) {
-                        this.logger.error(ex);
-                        return;
-                    }
+            if (!message.author.bot) {
+                this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
+                const command = this.commands
+                        .find((command) => command.isValid(message));
+                        
+                if (command !== undefined) {
+                    command.process(message)
+                        .then((success) => {
+                            this.logger.debug("message process done");
+                        }, (reject) => {
+                            this.logger.error(reject);
+                        })
                 }
             }
         });
 
         this.client.login(this.config.token);
-        
+
     }
 
-    private loadCommands(commandsPath: string, dataPath: string) {
-        if (!this.config.commands || !Array.isArray(this.config.commands) || this.config.commands.length === 0) {
-            throw new Error('Invalid / empty commands list');
+    private loadCommands(commandsPath: string) {
+        while (this._commands.length > 0) {
+            this._commands.pop();
         }
-        for (const cmdName of this.config.commands) {
-            const cmdClass = require(`${commandsPath}/${cmdName}`).default;
-            const command = new cmdClass() as ICommand;
-            command.init(this, resolve(`${dataPath}/${cmdName}`));
-            this.commands.push(command);
-            this.logger.info(`command "${cmdName}" loaded...`);
+        this.logger.debug(commandsPath);
+        const cmdList = readdirSync(commandsPath);
+        this.logger.debug(cmdList);
+        if(cmdList.length > 0){
+            cmdList.forEach((cmdName)=>{
+                cmdName = cmdName.split(".")[0];
+                cmdName = `${commandsPath}/${cmdName}`;
+                this.logger.debug(cmdName);
+                const cmdClass = require(cmdName);
+                this.logger.info(cmdClass);
+                Object.keys(cmdClass).forEach((key)=>{
+                    const command = new cmdClass[key](this.client.user.id) as ICommand;
+                    this._commands.push(command);
+                    this.logger.info(`command "${cmdName}" loaded...`);
+                });
+            });
         }
     }
 }

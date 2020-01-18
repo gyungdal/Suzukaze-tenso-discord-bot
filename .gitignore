@@ -98,3 +98,4 @@ public/
 # End of https://www.gitignore.io/api/node
 .vscode/arduino.json
 .vscode/c_cpp_properties.json
+src/bot/.env.suzukaze_tenso
