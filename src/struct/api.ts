@@ -24,8 +24,10 @@ export interface IConfig {
 export enum CommandType {
     ADMIN = "admin",
     TEST = "test",
-    HELP = "help"
+    HELP = "help",
+    UTIL = "util"
 };
+
 export interface ICommandDescription {
     type: CommandType;
     command: string;
