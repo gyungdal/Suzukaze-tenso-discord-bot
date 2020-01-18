@@ -28,20 +28,36 @@ export class Help implements ICommand {
 
     process(msg: Message): Promise<Boolean> {
         const message = new BotMessage(msg);
-        const helpMap = new Map();
-        this.bot.commands.forEach((command) => {
-            const help = command.help;
-            if (helpMap.has(help.type)) {
-                const value: String = helpMap.get(help.type);
-                helpMap.set(help.type.toString(), `${value}, ${help.command}`);
-            } else {
-                helpMap.set(help.type.toString(), help.command);
+        const splitData = msg.content.split(' ');
+        if(splitData.length > 2){
+            const type = splitData[2].toLowerCase() as CommandType;
+            this.bot.logger.info(type);
+            if(Object.values(CommandType).includes(type)){
+                message.setTitle(type);
+                const commands = this.bot.commands
+                                    .filter(value => value.help.type === type);
+                commands.forEach(value => {
+                    message.addField(value.help.command, value.help.desc);
+                });
+            }else{
+                message.setTitle("No Type");
             }
-        });
-        message.setTitle(this.help.desc);
-        helpMap.forEach((value, key, map) => {
-            message.addField(key, value);
-        });
+        }else{
+            const helpMap = new Map();
+            this.bot.commands.forEach((command) => {
+                const help = command.help;
+                if (helpMap.has(help.type)) {
+                    const value: String = helpMap.get(help.type);
+                    helpMap.set(help.type.toString(), `${value}, ${help.command}`);
+                } else {
+                    helpMap.set(help.type.toString(), help.command);
+                }
+            });
+            message.setTitle(this.help.desc);
+            helpMap.forEach((value, key, map) => {
+                message.addField(key, value);
+            });
+        }
         return message.sendReply()
             .then((resolve) => {
                 setTimeout(() => {

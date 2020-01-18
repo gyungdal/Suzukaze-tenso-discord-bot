@@ -22,9 +22,9 @@ export interface IConfig {
 }
 
 export enum CommandType {
-    ADMIN = "Admin",
-    TEST = "Test",
-    HELP = "Help"
+    ADMIN = "admin",
+    TEST = "test",
+    HELP = "help"
 };
 export interface ICommandDescription {
     type: CommandType;
