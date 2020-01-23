@@ -2,10 +2,14 @@ import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { ICommand, ICommandManager } from "../struct/api";
 import { Message } from "discord.js";
+import { IBot } from "../struct/api";
+
 export class CommandManager implements ICommandManager {
+    public readonly bot: IBot;
     public readonly commands: Array<ICommand>;
 
-    constructor() {
+    constructor(bot: IBot) {
+        this.bot = bot;
         this.commands = new Array();
     }
 
@@ -21,7 +25,7 @@ export class CommandManager implements ICommandManager {
                     cmdName = join(dirPath, cmdName);
                     const cmdClass = require(cmdName);
                     Object.keys(cmdClass).forEach((key) => {
-                        const command = new cmdClass[key](this) as ICommand;
+                        const command = new cmdClass[key](this.bot) as ICommand;
                         this.commands.push(command);
                     });
                 }

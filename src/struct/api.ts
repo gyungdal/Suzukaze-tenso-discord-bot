@@ -53,6 +53,7 @@ export interface ICommand {
 }
 
 export interface ICommandManager { 
+    readonly bot: IBot;
     readonly commands : Array<ICommand>;
     add(path : string) : Promise<boolean>;
     load(path: string): Promise<boolean>;
@@ -60,6 +61,7 @@ export interface ICommandManager {
 }
 
 export interface IServiceManager { 
+    readonly bot: IBot;
     readonly service : Array<IService>;
     add(path : string) : Promise<boolean>;
     load(path: string): Promise<boolean>;

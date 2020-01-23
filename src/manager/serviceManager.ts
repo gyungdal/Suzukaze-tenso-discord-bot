@@ -1,11 +1,13 @@
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { IService, IServiceManager } from "../struct/api";
-
+import { IBot } from "../struct/api";
 export class ServiceManager implements IServiceManager {
+    public readonly bot: IBot;
     public readonly service : Array<IService>;
 
-    constructor() {
+    constructor(bot: IBot) {
+        this.bot = bot;
         this.service = new Array();
     }
 
@@ -21,7 +23,7 @@ export class ServiceManager implements IServiceManager {
                     cmdName = join(dirPath, cmdName);
                     const cmdClass = require(cmdName);
                     Object.keys(cmdClass).forEach((key) => {
-                        const service = new cmdClass[key](this) as IService;
+                        const service = new cmdClass[key](this.bot) as IService;
                         this.service.push(service);
                     });
                 }

@@ -16,8 +16,8 @@ export class SuzukazeTenso implements IBot {
     constructor(logger: ILogger, config: IConfig) {
         this.config = config;
         this.logger = logger;
-        this.serviceManager = new ServiceManager();
-        this.commandManager = new CommandManager();
+        this.serviceManager = new ServiceManager(this);
+        this.commandManager = new CommandManager(this);
         this.client = new Client();
     }
 
