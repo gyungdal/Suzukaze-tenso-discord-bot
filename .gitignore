@@ -99,3 +99,4 @@ public/
 .vscode/arduino.json
 .vscode/c_cpp_properties.json
 src/bot/.env.suzukaze_tenso
+*.env.suzukaze_tenso
