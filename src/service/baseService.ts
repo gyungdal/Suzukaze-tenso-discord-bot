@@ -23,7 +23,7 @@ export class BaseService implements IService {
     public get status() : ServiceStatus{
         return this._status;
     }
-    
+
     addOrSetArgv(arg: string): void {
         if(!this._argv.includes(arg)){
             this._argv.push(arg);
@@ -34,7 +34,7 @@ export class BaseService implements IService {
             delete this._argv[this._argv.findIndex(value => value === arg)];
         }
     }
-    execute(msg : Message) : void{
+    execute(msg : Message) : Promise<boolean>{
         throw new Error("Method not implemented.");
     }
     start(): ServiceStatus {

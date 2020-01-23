@@ -7,11 +7,30 @@ export class Ban extends BaseService {
         this._name = "ban";
     }
 
-    execute(msg : Message) : void {
+    execute(msg : Message) : Promise<boolean> {
         if(this.argv.includes(msg.author.id)){
             if(msg.deletable){
-                msg.delete();
+                msg.reply("너 싫대").then((success)=>{
+                    msg.delete();
+                    setTimeout(()=>{
+                        if(Array.isArray(success)){
+                            success.forEach((send)=>{
+                                if(send.deletable){
+                                    send.delete();
+                                }
+                            })
+                        }else{
+                            if(success.deletable){
+                                success.delete();
+                            }
+                        }
+                    }, 1000);
+                });
+                return Promise.resolve(true);
+            }else{
+                return Promise.reject("can't remove message");
             }
         }
+        return Promise.reject("not used");
     }
 }

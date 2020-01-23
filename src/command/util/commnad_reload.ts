@@ -22,6 +22,9 @@ export class CommandReload implements ICommand {
 
     isValid(msg: Message): boolean {
         if (msg.mentions.users.has(this.bot.config.id)) {
+            if(msg.content.split(' ').length < 2){
+                return false;
+            }
             const check = msg.content.split(' ')[1].toLowerCase()
                  === this.help.command;
             const userCheck = this.authUser.includes(msg.author.id);

@@ -1,7 +1,7 @@
 import { IBot, ICommand, ICommandDescription, CommandType } from "../../struct/api";
 import { Message } from "discord.js";
 import { BotMessage } from "../../struct/message";
-export class Ping implements ICommand {
+export class Ban implements ICommand {
     public readonly bot: IBot;
     constructor(bot: IBot) {
         this.bot = bot;
@@ -10,7 +10,7 @@ export class Ping implements ICommand {
     get help(): ICommandDescription {
         return {
             type: CommandType.TEST,
-            command: "rm",
+            command: "ban",
             desc: '메세지 제거'
         }
     }
@@ -29,6 +29,9 @@ export class Ping implements ICommand {
     }
 
     async process(msg: Message): Promise<Boolean> {
+        if(msg.content.split(' ').length < 2){
+            return Promise.reject("no number");
+        }
         const countParse = Number(msg.content.split(' ')[2]);
         let count;
         if (Number.isNaN(countParse)) {

@@ -83,7 +83,7 @@ export interface IService {
     readonly status : ServiceStatus;
     addOrSetArgv(arg : string) : void;
     removeArgv(arg : string) : void;
-    execute(msg : Message) : void;
+    execute(msg : Message) : Promise<Boolean>;
     start() : ServiceStatus;
     stop() : ServiceStatus;
 }
