@@ -34,7 +34,7 @@ export class Help implements ICommand {
             this.bot.logger.info(type);
             if(Object.values(CommandType).includes(type)){
                 message.setTitle(type);
-                const commands = this.bot.commands
+                const commands = this.bot.commandManager.commands
                                     .filter(value => value.help.type === type);
                 commands.forEach(value => {
                     message.addField(value.help.command, value.help.desc);
@@ -44,7 +44,7 @@ export class Help implements ICommand {
             }
         }else{
             const helpMap = new Map();
-            this.bot.commands.forEach((command) => {
+            this.bot.commandManager.commands.forEach((command) => {
                 const help = command.help;
                 if (helpMap.has(help.type)) {
                     const value: String = helpMap.get(help.type);

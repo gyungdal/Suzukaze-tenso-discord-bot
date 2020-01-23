@@ -34,7 +34,7 @@ export class CommandReload implements ICommand {
 
     async process(msg: Message): Promise<Boolean> {
         const message = new BotMessage(msg);
-        const value = await this.bot.loadCommands(`${__dirname}/../`);
+        const value = await this.bot.commandManager.load(`${__dirname}/../`);
         message.setTitle(this.help.desc);
         if(value){
             message.setDescription("Success");

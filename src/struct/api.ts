@@ -1,4 +1,6 @@
-import { Message, RichEmbed } from "discord.js";
+import { Message, RichEmbed, Client } from "discord.js";
+import { ServiceManager } from "../manager/serviceManager";
+import { CommandManager } from "../manager/commandManager";
 
 export interface ILoggerMethod {
     (msg: string, ...args: any[]): void
@@ -35,15 +37,13 @@ export interface ICommandDescription {
 }
 
 export interface IBot {
+    readonly client : Client;
     readonly config: IConfig;
-
-    readonly commands: Array<ICommand>;
-    readonly services : Array<IService>;
     readonly logger: ILogger;
+    readonly serviceManager : IServiceManager;
+    readonly commandManager : ICommandManager;
 
     start(logger: ILogger, config: IConfig): void;
-    loadCommands(commandsPath: string): Promise<boolean>;
-    addCommandsInDir(dirPath: string): Promise<boolean>;
 }
 export interface ICommand {
     readonly bot: IBot;
@@ -56,6 +56,7 @@ export interface ICommandManager {
     readonly commands : Array<ICommand>;
     add(path : string) : Promise<boolean>;
     load(path: string): Promise<boolean>;
+    execute(msg : Message) : Promise<Boolean>;
 }
 
 export interface IServiceManager { 

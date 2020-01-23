@@ -1,11 +1,11 @@
 import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { ICommand, ICommandManager } from "../struct/api";
-
+import { Message } from "discord.js";
 export class CommandManager implements ICommandManager {
     public readonly commands: Array<ICommand>;
-    
-    constructor(){
+
+    constructor() {
         this.commands = new Array();
     }
 
@@ -42,5 +42,15 @@ export class CommandManager implements ICommandManager {
         } else {
             return Promise.reject("No Commands");
         }
+    }
+
+    execute(message: Message): Promise<Boolean> {
+        const command = this.commands
+            .find((command) => command.isValid(message));
+
+        if (command !== undefined) {
+            return command.process(message);
+        }
+        return Promise.reject("No Command");
     }
 }
