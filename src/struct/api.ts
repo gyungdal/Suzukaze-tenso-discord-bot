@@ -58,6 +58,20 @@ export interface IUser {
     tag: string;
 }
 
+export enum ServiceStatus{
+    RUNNING,
+    STOP
+};
+export interface IService {
+    readonly argv : Array<string>;
+    readonly status : ServiceStatus;
+    addOrSetArgv(arg : string) : void;
+    removeArgv(arg : string) : void;
+    execute() : void;
+    start() : ServiceStatus;
+    stop() : ServiceStatus;
+}
+
 type MessageColor =
     [number, number, number]
     | number
