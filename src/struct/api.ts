@@ -63,11 +63,12 @@ export enum ServiceStatus{
     STOP
 };
 export interface IService {
+    readonly name : string;
     readonly argv : Array<string>;
     readonly status : ServiceStatus;
     addOrSetArgv(arg : string) : void;
     removeArgv(arg : string) : void;
-    execute() : void;
+    execute(msg : Message) : void;
     start() : ServiceStatus;
     stop() : ServiceStatus;
 }
