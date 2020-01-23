@@ -1,0 +1,47 @@
+import { readdirSync, lstatSync } from "fs";
+import { join } from "path";
+import { IService, IServiceManager } from "../struct/api";
+
+export class ServiceManager implements IServiceManager {
+    public readonly service : Array<IService>;
+
+    constructor() {
+        this.service = new Array();
+    }
+
+    public add(dirPath: string): Promise<boolean> {
+        try {
+            const fileList = readdirSync(dirPath);
+            fileList.forEach((cmdName) => {
+                const file = lstatSync(join(dirPath, cmdName));
+                if (file.isDirectory()) {
+                    this.add(join(dirPath, cmdName));
+                } else {
+                    cmdName = cmdName.split(".")[0];
+                    cmdName = join(dirPath, cmdName);
+                    const cmdClass = require(cmdName);
+                    Object.keys(cmdClass).forEach((key) => {
+                        const service = new cmdClass[key](this) as IService;
+                        this.service.push(service);
+                    });
+                }
+            });
+            return Promise.resolve(true);
+        } catch (e) {
+            return Promise.reject(e);
+        }
+    }
+
+    public load(path: string): Promise<boolean> {
+        while (this.service.length > 0) {
+            this.service.pop();
+        }
+        const cmdList = readdirSync(path);
+        if (cmdList.length > 0) {
+            return this.add(path);
+        } else {
+            return Promise.reject("No Commands");
+        }
+    }
+
+}

@@ -35,11 +35,12 @@ export interface ICommandDescription {
 }
 
 export interface IBot {
-    config: IConfig;
+    readonly config: IConfig;
+
     readonly commands: Array<ICommand>;
+    readonly services : Array<IService>;
     readonly logger: ILogger;
-    readonly allUsers: IUser[];
-    readonly onlineUsers: IUser[];
+
     start(logger: ILogger, config: IConfig): void;
     loadCommands(commandsPath: string): Promise<boolean>;
     addCommandsInDir(dirPath: string): Promise<boolean>;
@@ -51,6 +52,17 @@ export interface ICommand {
     process(msg: Message): Promise<Boolean>;
 }
 
+export interface ICommandManager { 
+    readonly commands : Array<ICommand>;
+    add(path : string) : Promise<boolean>;
+    load(path: string): Promise<boolean>;
+}
+
+export interface IServiceManager { 
+    readonly service : Array<IService>;
+    add(path : string) : Promise<boolean>;
+    load(path: string): Promise<boolean>;
+}
 export interface IUser {
     id: string;
     username: string;
@@ -73,10 +85,11 @@ export interface IService {
     stop() : ServiceStatus;
 }
 
-type MessageColor =
+export type MessageColor =
     [number, number, number]
     | number
     | string;
+
 
 export interface IMessage {
     readonly recvMessage: Message;

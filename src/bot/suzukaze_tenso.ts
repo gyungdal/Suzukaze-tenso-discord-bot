@@ -1,19 +1,22 @@
 import dotenv from 'dotenv';
 import { join } from "path";
-import { Client, MessageEmbedImage } from "discord.js";
-import { IBot, ICommand, IConfig, IMessage, ILogger, ICommandDescription } from "../struct/api";
+import { Client } from "discord.js";
+import { IBot, ICommand, IConfig, ILogger, IService } from "../struct/api";
 import { readdirSync, lstatSync } from "fs";
 
 export class SuzukazeTenso implements IBot {
+    
     client: Client;
     config: IConfig;
     logger: ILogger;
 
+    services: Array<IService>;
     commands: Array<ICommand>;
 
     constructor() {
         dotenv.config({ path: join(__dirname, '.env.suzukaze_tenso') });
         this.commands = new Array();
+        this.services = new Array();
         this.client = new Client();
         this.logger = {
             debug: console.debug,
@@ -30,17 +33,6 @@ export class SuzukazeTenso implements IBot {
             denyAnswer: process.env.DENY_ANSWER || "NOP"
         };
     }
-
-    public get allUsers() {
-        return this.client
-            ? this.client.users.array().filter((i) => i.id !== '1')
-            : [];
-    }
-
-    public get onlineUsers() {
-        return this.allUsers.filter((i) => i.presence.status !== 'offline');
-    }
-
 
     public start(logger: ILogger = this.logger, config: IConfig = this.config) {
         this.logger = logger;
