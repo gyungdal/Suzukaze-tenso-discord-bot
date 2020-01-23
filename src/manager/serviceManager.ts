@@ -11,6 +11,14 @@ export class ServiceManager implements IServiceManager {
         this.service = new Array();
     }
 
+    public find(name : string): Promise<IService>{
+        const service = this.service.find(service => service.name === name);
+        if(service === undefined){
+            return Promise.reject("Not found service");
+        }
+        return Promise.resolve(service);
+    }
+    
     public add(dirPath: string): Promise<boolean> {
         try {
             const fileList = readdirSync(dirPath);

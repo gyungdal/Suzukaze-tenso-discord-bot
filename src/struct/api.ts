@@ -65,6 +65,7 @@ export interface IServiceManager {
     readonly service : Array<IService>;
     add(path : string) : Promise<boolean>;
     load(path: string): Promise<boolean>;
+    find(name : string): Promise<IService>;
 }
 export interface IUser {
     id: string;
