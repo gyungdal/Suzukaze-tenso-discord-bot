@@ -37,10 +37,12 @@ export class BaseService implements IService {
     execute(msg : Message) : Promise<boolean>{
         throw new Error("Method not implemented.");
     }
+
     start(): ServiceStatus {
         this._status = ServiceStatus.RUNNING;
         return this.status;
     }
+
     stop(): ServiceStatus {
         this._status = ServiceStatus.STOP;
         return this.status;

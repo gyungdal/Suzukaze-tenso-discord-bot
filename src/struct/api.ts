@@ -1,4 +1,4 @@
-import { Message, RichEmbed, Client } from "discord.js";
+import { Message, RichEmbed, Client, Snowflake } from "discord.js";
 import { ServiceManager } from "../manager/serviceManager";
 import { CommandManager } from "../manager/commandManager";
 
@@ -78,6 +78,19 @@ export enum ServiceStatus{
     RUNNING,
     STOP
 };
+
+export interface IDaemon {
+    readonly name : string;
+    readonly user : Array<Snowflake>;
+    readonly timer : NodeJS.Timeout;
+    readonly interval : number;
+    addUser(arg : Snowflake) : void;
+    delUser(arg : Snowflake) : void;
+    execute(msg : Message) : Promise<Boolean>;
+    start() : Promise<Boolean>;
+    stop() : Promise<Boolean>;
+}
+
 export interface IService {
     readonly name : string;
     readonly argv : Array<string>;
