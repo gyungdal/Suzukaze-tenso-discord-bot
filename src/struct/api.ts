@@ -1,6 +1,6 @@
 import { Message, RichEmbed, Client, Snowflake } from "discord.js";
-import { ServiceManager } from "../manager/serviceManager";
-import { CommandManager } from "../manager/commandManager";
+import { ServiceManager } from "../manager/service";
+import { CommandManager } from "../manager/command";
 
 export interface ILoggerMethod {
     (msg: string, ...args: any[]): void
@@ -37,11 +37,11 @@ export interface ICommandDescription {
 }
 
 export interface IBot {
-    readonly client : Client;
+    readonly client: Client;
     readonly config: IConfig;
     readonly logger: ILogger;
-    readonly serviceManager : IServiceManager;
-    readonly commandManager : ICommandManager;
+    readonly serviceManager: IServiceManager;
+    readonly commandManager: ICommandManager;
 
     start(logger: ILogger, config: IConfig): void;
 }
@@ -52,21 +52,29 @@ export interface ICommand {
     process(msg: Message): Promise<Boolean>;
 }
 
-export interface ICommandManager { 
+export interface ICommandManager {
     readonly bot: IBot;
-    readonly commands : Array<ICommand>;
-    add(path : string) : Promise<boolean>;
+    readonly commands: Array<ICommand>;
+    add(path: string): Promise<boolean>;
     load(path: string): Promise<boolean>;
-    execute(msg : Message) : Promise<Boolean>;
+    execute(msg: Message): Promise<Boolean>;
+}
+export interface IDaemonManager {
+    readonly bot: IBot;
+    readonly timer: Array<NodeJS.Timeout>;
+    add(path: string): Promise<boolean>;
+    load(path: string): Promise<boolean>;
+    find(name: string): Promise<IDaemon>;
 }
 
-export interface IServiceManager { 
+export interface IServiceManager {
     readonly bot: IBot;
-    readonly service : Array<IService>;
-    add(path : string) : Promise<boolean>;
+    readonly service: Array<IService>;
+    add(path: string): Promise<boolean>;
     load(path: string): Promise<boolean>;
-    find(name : string): Promise<IService>;
+    find(name: string): Promise<IService>;
 }
+
 export interface IUser {
     id: string;
     username: string;
@@ -74,32 +82,30 @@ export interface IUser {
     tag: string;
 }
 
-export enum ServiceStatus{
+export enum ServiceStatus {
     RUNNING,
     STOP
 };
 
+
 export interface IDaemon {
-    readonly name : string;
-    readonly user : Array<Snowflake>;
-    readonly timer : NodeJS.Timeout;
-    readonly interval : number;
-    addUser(arg : Snowflake) : void;
-    delUser(arg : Snowflake) : void;
-    execute(msg : Message) : Promise<Boolean>;
-    start() : Promise<Boolean>;
-    stop() : Promise<Boolean>;
+    readonly name: string;
+    readonly id: Array<Snowflake>;
+    readonly interval: number;
+    addId(arg: Snowflake): void;
+    delId(arg: Snowflake): void;
+    execute(client: Client): Promise<Boolean>;
 }
 
 export interface IService {
-    readonly name : string;
-    readonly argv : Array<string>;
-    readonly status : ServiceStatus;
-    addOrSetArgv(arg : string) : void;
-    removeArgv(arg : string) : void;
-    execute(msg : Message) : Promise<Boolean>;
-    start() : ServiceStatus;
-    stop() : ServiceStatus;
+    readonly name: string;
+    readonly argv: Array<string>;
+    readonly status: ServiceStatus;
+    addOrSetArgv(arg: string): void;
+    removeArgv(arg: string): void;
+    execute(msg: Message): Promise<Boolean>;
+    start(): ServiceStatus;
+    stop(): ServiceStatus;
 }
 
 export type MessageColor =

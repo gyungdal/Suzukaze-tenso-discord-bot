@@ -1,36 +1,24 @@
-import { BaseDaemon } from "./baseDaemon";
-import { Message } from "discord.js";
+import { BaseDaemon } from "./base";
+import { Client, Message, User } from "discord.js";
 
 export class Army extends BaseDaemon {
-    constructor(){
+    private lastKey: number;
+    constructor() {
         super();
         this._name = "army";
+        this.lastKey = 0;
     }
 
-    execute(msg : Message) : Promise<boolean> {
-        if(this.argv.includes(msg.author.id)){
-            if(msg.deletable){
-                msg.reply("너 싫대").then((success)=>{
-                    msg.delete();
-                    setTimeout(()=>{
-                        if(Array.isArray(success)){
-                            success.forEach((send)=>{
-                                if(send.deletable){
-                                    send.delete();
-                                }
-                            })
-                        }else{
-                            if(success.deletable){
-                                success.delete();
-                            }
-                        }
-                    }, 1000);
-                });
-                return Promise.resolve(true);
-            }else{
-                return Promise.reject("can't remove message");
-            }
+    execute(client: Client): Promise<boolean> {
+        const userList = client.users.filter((user: User) => {
+            return this.id.includes(user.id);
+        }).array();
+        if (userList.length < 1) {
+            return Promise.reject("No Users");
         }
-        return Promise.reject("not used");
+        userList.forEach((user)=>{
+            user.sendMessage("TEST");
+        });
+        return Promise.resolve(true);
     }
 }

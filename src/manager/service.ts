@@ -32,7 +32,9 @@ export class ServiceManager implements IServiceManager {
                     const cmdClass = require(cmdName);
                     Object.keys(cmdClass).forEach((key) => {
                         const service = new cmdClass[key](this.bot) as IService;
-                        this.service.push(service);
+                        if(service.name.length >= 1){
+                            this.service.push(service);
+                        }
                     });
                 }
             });

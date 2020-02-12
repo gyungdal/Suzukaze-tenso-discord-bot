@@ -3,8 +3,8 @@ import { join } from "path";
 import { Client } from "discord.js";
 import { IServiceManager, ICommandManager, IBot, ICommand, IConfig, ILogger, IService } from "../struct/api";
 import { readdirSync, lstatSync } from "fs";
-import { ServiceManager } from '../manager/serviceManager';
-import { CommandManager } from '../manager/commandManager';
+import { ServiceManager } from '../manager/service';
+import { CommandManager } from '../manager/command';
 
 export class SuzukazeTenso implements IBot {
     public readonly client: Client;
