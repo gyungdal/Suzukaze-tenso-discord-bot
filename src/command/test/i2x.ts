@@ -15,6 +15,7 @@ export class I2X implements ICommand {
         }
     }
 
+    
     isValid(msg: Message): boolean {
         if (msg.mentions.users.has(this.bot.config.id)) {
             if(msg.content.split(' ').length < 2){

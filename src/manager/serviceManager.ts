@@ -14,11 +14,10 @@ export class ServiceManager implements IServiceManager {
     public find(name : string): Promise<IService>{
         const service = this.service.find(service => service.name === name);
         if(service === undefined){
-            return Promise.reject("Not found service");
+            return Promise.reject("Not found s ervice");
         }
         return Promise.resolve(service);
     }
-    
     public add(dirPath: string): Promise<boolean> {
         try {
             const fileList = readdirSync(dirPath);
@@ -32,9 +31,7 @@ export class ServiceManager implements IServiceManager {
                     const cmdClass = require(cmdName);
                     Object.keys(cmdClass).forEach((key) => {
                         const service = new cmdClass[key](this.bot) as IService;
-                        if(service.name.length >= 1){
-                            this.service.push(service);
-                        }
+                        this.service.push(service);
                     });
                 }
             });
