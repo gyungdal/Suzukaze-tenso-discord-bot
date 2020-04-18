@@ -28,8 +28,11 @@ export class SuzukazeTenso implements IBot {
 
         this.client.on('ready', () => {
             this.config.id = this.client.user.id;
+            this.logger.info("Ready");
             this.commandManager.load(join(__dirname, '..', 'command'));
+            this.logger.info("Command Ready");
             this.serviceManager.load(join(__dirname, '..', 'service'));
+            this.logger.info("Service Ready");
             if (this.config.game) {
                 this.client.user.setGame(this.config.game);
             }
