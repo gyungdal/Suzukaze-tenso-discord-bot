@@ -1,4 +1,4 @@
-import { ServiceExecuteResultType, IBot, IService } from "../struct/api";
+import { IBot, IService } from "../struct/api";
 import { Message } from "discord.js";
 
 export class BaseService implements IService {
@@ -48,7 +48,7 @@ export class BaseService implements IService {
         }
     }
 
-    execute(msg : Message) : Promise<ServiceExecuteResultType>{
+    execute(msg : Message) {
         throw new Error("Method not implemented.");
     }
 }
