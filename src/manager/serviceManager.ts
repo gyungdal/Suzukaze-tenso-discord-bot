@@ -65,7 +65,7 @@ export class ServiceManager implements IServiceManager {
             return await serv.execute(msg);
         }
         else
-            return ServiceExecuteResultType.NEED_EXECUTE_COMMAND;
+            return Promise.resolve(ServiceExecuteResultType.NEED_EXECUTE_COMMAND);
         
     }
 }
