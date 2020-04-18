@@ -66,6 +66,6 @@ export class ServiceManager implements IServiceManager {
         }
         else
             return Promise.resolve(ServiceExecuteResultType.NEED_EXECUTE_COMMAND);
-        
+          
     }
 }

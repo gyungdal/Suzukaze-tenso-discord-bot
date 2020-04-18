@@ -1,4 +1,4 @@
-import { BaseService } from "./baseService";
+import { BaseService } from "../base/baseService";
 import { Message } from "discord.js";
 import { IBot, ServiceExecuteResultType } from "../struct/api";
 
