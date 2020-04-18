@@ -44,6 +44,9 @@ export class SuzukazeTenso implements IBot {
         });
 
         this.client.on('message', async message => {
+            if(message.author.id === this.client.user.id){
+                return;
+            }
             const check = await this.serviceManager.execute(message);
             if(check != ServiceExecuteResultType.CLEAR){
                 this.logger.info("execute command");
