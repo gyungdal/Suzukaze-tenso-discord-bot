@@ -32,6 +32,9 @@ export class Ban implements ICommand {
         const users = msg.mentions.users.filter(value => value.id !== this.bot.client.user.id);
         if(users.size == 0){
             return Promise.reject("no number");
+        }else{
+            const id = users.map(value => value.id);
+            this.bot.logger.info(`ban list : ${id.join(', ')}`);
         }
         const service = await this.bot.serviceManager.find(this.help.command);
         if(msg.content.includes("!")){
