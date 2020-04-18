@@ -29,6 +29,7 @@ export class SuzukazeTenso implements IBot {
         this.client.on('ready', () => {
             this.config.id = this.client.user.id;
             this.commandManager.load(join(__dirname, '..', 'command'));
+            this.serviceManager.load(join(__dirname, '..', 'service'));
             if (this.config.game) {
                 this.client.user.setGame(this.config.game);
             }
@@ -40,7 +41,8 @@ export class SuzukazeTenso implements IBot {
         });
 
 
-        this.client.on('message', message => {
+        this.client.on('message', async message => {
+        
             if (!message.author.bot) {
                 this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
                 this.commandManager.execute(message).then((success) => {

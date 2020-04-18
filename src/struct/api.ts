@@ -78,9 +78,10 @@ export interface IService {
     readonly name : string;
     readonly argv : Array<string>;
     readonly priority : number;
+    readonly bot : IBot;
     addOrSetArgv(arg : string) : void;
     removeArgv(arg : string) : void;
-    execute(msg : Message) : Promise<Boolean>;
+    execute(msg : Message) : void;
 }
 
 export type MessageColor =

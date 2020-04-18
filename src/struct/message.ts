@@ -11,10 +11,10 @@ export class BotMessage implements IMessage {
         this.richText.title = undefined;
     }
 
-    public sendReply(): Promise<(Message | Array<Message>)> {
+    public sendReply(): Promise<(Message)> {
         return this.recvMessage.reply({ embed: this.richText });
     }
-    public sendChannel(): Promise<(Message | Array<Message>)> {
+    public sendChannel(): Promise<(Message)> {
         return this.recvMessage.channel.send({ embed: this.richText });
     }
 

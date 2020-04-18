@@ -33,10 +33,19 @@ export class SystemLoad implements ICommand {
 
     async process(msg: Message): Promise<Boolean> {
         const service = await this.bot.serviceManager.find(this.help.command);
-        service.addOrSetArgv(msg.author.id);
-        const reply = await msg.reply("Success");
+        const message = new BotMessage(msg);
+        message.setTitle(this.help.desc);
+        
+        if(service.argv.includes(msg.author.id)){
+            service.removeArgv(msg.author.id);
+            message.addField("status", "disable");
+        }else{
+            service.addOrSetArgv(msg.author.id);
+            message.addField("status", "enable");
+        }
+        const reply = await message.sendReply();
         setTimeout(async ()=>{
-            await msg.channel.bulkDelete([msg, reply]);
+            msg.channel.bulkDelete([msg, reply]);
         }, 1000);
         return Promise.resolve(true);
     }
