@@ -29,20 +29,17 @@ export class Ban implements ICommand {
     }
 
     async process(msg: Message): Promise<Boolean> {
-        if(msg.content.split(' ').length < 2){
+        const users = msg.mentions.users.filter(value => value.id !== this.bot.client.user.id);
+        if(users.size == 0){
             return Promise.reject("no number");
         }
-        const countParse = Number(msg.content.split(' ')[2]);
-        let count;
-        if (Number.isNaN(countParse)) {
-            count = 1;
-        } else {
-            count = countParse;
+        const service = await this.bot.serviceManager.find(this.help.command);
+        if(msg.content.includes("!")){
+            users.forEach(value=> service.removeArgv(value.id));
+        }else{
+            users.forEach(value=> service.addOrSetArgv(value.id));
         }
-        return msg.channel.fetchMessages({ limit: count })
-            .then(success => msg.channel.bulkDelete(success)
-                , reject => Promise.reject(reject))
-            .then(sucess => Promise.resolve(true)
-                , reject => Promise.reject(reject));
+        msg.react("✅");
+        return Promise.resolve(true);
     }
 }
