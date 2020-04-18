@@ -21,6 +21,7 @@ export class Ban implements ICommand {
                 return false;
             }
             const check = msg.content.split(' ').includes(this.help.command);
+            console.log(this.bot.config.adminId.join(', '));
             const user = this.bot.config.adminId.includes(msg.author.id);
             this.bot.logger.info(`${this.help.command} : ${check}`);
             return check && user;

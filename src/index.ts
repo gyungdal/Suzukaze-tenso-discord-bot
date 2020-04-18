@@ -18,7 +18,7 @@ const config : IConfig = {
     token: process.env.DISCORD_SECRET || "NOP",
     game: "",
     userName: "",
-    adminId: admin?.map(value => value.trim()) || [""]
+    adminId: admin?.map(value => value.replace(/\"|\[|\]|\'/g, '').trim()) || [""]
 };
 const tenso = new SuzukazeTenso(logger, config);
 tenso.start();
