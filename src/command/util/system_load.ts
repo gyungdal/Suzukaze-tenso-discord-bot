@@ -1,6 +1,8 @@
 import { IBot, ICommand, IMessage, ICommandDescription, CommandType } from "../../struct/api";
 import { Message } from "discord.js";
 import { BotMessage } from "../../struct/message";
+import { platform, release, freemem, loadavg, cpus, arch} from "os";
+
 export class SystemLoad implements ICommand {
     public readonly bot: IBot;
     constructor(bot: IBot) {
@@ -31,6 +33,12 @@ export class SystemLoad implements ICommand {
     process(msg: Message): Promise<Boolean> {
         const message = new BotMessage(msg);
         message.setTitle(this.help.desc);
+        message.addField("platform", platform());
+        message.addField("cpu", cpus().pop()?.model ?? "No support");
+        message.addField("arch", arch());
+        message.addField("release", release());
+        message.addField("freemem", freemem().toString());
+        message.addField("loadavg", loadavg().toString());
         return message.sendReply()
             .then((resolve) => {
                 setTimeout(() => {
