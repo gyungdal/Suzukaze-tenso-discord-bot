@@ -17,7 +17,7 @@ export class ServiceManager implements IServiceManager {
 
     public find(name : string): Promise<IService>{
         const service = this.service.find(service => service.name === name);
-        if(service === undefined){
+        if(isUndefined(service)){
             return Promise.reject("Not found s ervice");
         }
         return Promise.resolve(service);

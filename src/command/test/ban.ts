@@ -30,19 +30,28 @@ export class Ban implements ICommand {
 
     async process(msg: Message): Promise<Boolean> {
         const users = msg.mentions.users.filter(value => value.id !== this.bot.client.user.id);
-        const service = await this.bot.serviceManager.find(this.help.command);
-        if(users.size == 0){
-            return Promise.reject("no number");
-        }else{
-            const id = users.map(value => value.id);
-            this.bot.logger.info(`ban list : ${id.join(', ')}`);
-            if(msg.content.includes("!")){
-                id.forEach((value, index, array) => service.removeArgv(value));
+        this.bot.serviceManager.find(this.help.command).then(service =>{
+            if(users.size == 0){
+                return Promise.reject("no number");
             }else{
-                id.forEach((value, index, array) => service.addOrSetArgv(value));
+                const id = users.map(value => value.id);
+                this.bot.logger.info(`ban list : ${id.join(', ')}`);
+                if(msg.cleanContent.includes("!")){
+                    for (const value of id.values()) {
+                        this.bot.logger.info(`ban remove : ${value}`);
+                        service.removeArgv(value);
+                    }
+                }else{
+                    for (const value of id.values()) {
+                        this.bot.logger.info(`ban add : ${value}`);
+                        service.addOrSetArgv(value);
+                    }
+                }
             }
-        }
-        msg.react("✅");
+            msg.react("✅");
+        }, reject=>{
+            this.bot.logger.error(reject);
+        });
         return Promise.resolve(true);
     }
 }

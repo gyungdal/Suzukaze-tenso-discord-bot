@@ -19,8 +19,6 @@ export class Ban extends BaseService {
     }
 
     isValid(msg : Message) : boolean {
-        this.bot.logger.info(`ban List : ${this.argv.join(", ")}`);
-        this.bot.logger.info(`msg id : ${msg.author.id}`);
         return this.argv.includes(msg.author.id);
     }
 

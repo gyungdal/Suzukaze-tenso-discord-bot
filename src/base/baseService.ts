@@ -30,6 +30,7 @@ export class BaseService implements IService {
     }
 
     addOrSetArgv(arg: string): void {
+        this.bot.logger.info(`argv : ${this._argv.join(", ")}, ${this._argv.includes(arg)}`);
         if(!this._argv.includes(arg)){
             this.bot.logger.info(`argv insert : ${arg}`);
             this._argv.push(arg);
