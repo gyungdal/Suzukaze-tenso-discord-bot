@@ -35,8 +35,8 @@ export class BaseService implements IService {
             this._argv.push(arg);
             this.bot.logger.info(`argv : ${this._argv.join(", ")}`);
         }
-
     }
+
     isValid(msg : Message) : boolean {
         throw new Error("Method not implemented.");
     }

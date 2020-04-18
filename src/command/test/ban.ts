@@ -30,17 +30,17 @@ export class Ban implements ICommand {
 
     async process(msg: Message): Promise<Boolean> {
         const users = msg.mentions.users.filter(value => value.id !== this.bot.client.user.id);
+        const service = await this.bot.serviceManager.find(this.help.command);
         if(users.size == 0){
             return Promise.reject("no number");
         }else{
             const id = users.map(value => value.id);
             this.bot.logger.info(`ban list : ${id.join(', ')}`);
-        }
-        const service = await this.bot.serviceManager.find(this.help.command);
-        if(msg.content.includes("!")){
-            users.forEach(value=> service.removeArgv(value.id));
-        }else{
-            users.forEach(value=> service.addOrSetArgv(value.id));
+            if(msg.content.includes("!")){
+                id.forEach((value, index, array) => service.removeArgv(value));
+            }else{
+                id.forEach((value, index, array) => service.addOrSetArgv(value));
+            }
         }
         msg.react("✅");
         return Promise.resolve(true);
