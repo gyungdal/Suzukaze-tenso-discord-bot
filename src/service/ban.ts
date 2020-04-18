@@ -10,6 +10,8 @@ export class Ban extends BaseService {
     }
 
     async execute(msg : Message) : Promise<ServiceExecuteResultType> {
+        this.bot.logger.info(`ban List : ${this.argv.join(", ")}`);
+        this.bot.logger.info(`msg id : ${msg.author.id}`);
         if(this.argv.includes(msg.author.id)){
             if(msg.deletable){
                 await msg.delete();
