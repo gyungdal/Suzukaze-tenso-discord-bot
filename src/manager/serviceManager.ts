@@ -62,7 +62,7 @@ export class ServiceManager implements IServiceManager {
     async execute(msg: Message): Promise<ServiceExecuteResultType>{
         const serv = this.service.find(service => service.isValid(msg));
         if(!isUndefined(serv)){
-            return await serv.execute(msg);
+            return serv.execute(msg);
         }
         else
             return Promise.resolve(ServiceExecuteResultType.NEED_EXECUTE_COMMAND);
