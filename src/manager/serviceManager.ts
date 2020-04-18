@@ -2,6 +2,10 @@ import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { IService, IServiceManager } from "../struct/api";
 import { IBot } from "../struct/api";
+import { ServiceExecuteResultType } from "../struct/api";
+import { Message } from "discord.js";
+import { isUndefined } from "util";
+
 export class ServiceManager implements IServiceManager {
     public readonly bot: IBot;
     public readonly service : Array<IService>;
@@ -54,5 +58,14 @@ export class ServiceManager implements IServiceManager {
             return Promise.reject("No Commands");
         }
     }
-
+    
+    async execute(msg: Message): Promise<ServiceExecuteResultType>{
+        const serv = this.service.find(service => service.isValid(msg));
+        if(!isUndefined(serv)){
+            return await serv.execute(msg);
+        }
+        else
+            return ServiceExecuteResultType.NEED_EXECUTE_COMMAND;
+        
+    }
 }

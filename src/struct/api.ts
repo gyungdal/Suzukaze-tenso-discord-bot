@@ -66,7 +66,14 @@ export interface IServiceManager {
     add(path : string) : Promise<boolean>;
     load(path: string): Promise<boolean>;
     find(name : string): Promise<IService>;
+    execute(msg : Message) : Promise<ServiceExecuteResultType>;
 }
+
+export enum ServiceExecuteResultType {
+    NEED_EXECUTE_COMMAND, //그 이후에 커맨드도 동작 시켜도 될때
+    CLEAR //바로 정리
+};
+
 export interface IUser {
     id: string;
     username: string;
@@ -81,7 +88,8 @@ export interface IService {
     readonly bot : IBot;
     addOrSetArgv(arg : string) : void;
     removeArgv(arg : string) : void;
-    execute(msg : Message) : void;
+    execute(msg : Message) : Promise<ServiceExecuteResultType>;
+    isValid(msg : Message) : boolean;
 }
 
 export type MessageColor =

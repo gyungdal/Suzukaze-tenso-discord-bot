@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { join } from "path";
 import { Client } from "discord.js";
-import { IServiceManager, ICommandManager, IBot, ICommand, IConfig, ILogger, IService } from "../struct/api";
+import { ServiceExecuteResultType, IServiceManager, ICommandManager, IBot, ICommand, IConfig, ILogger, IService } from "../struct/api";
 import { readdirSync, lstatSync } from "fs";
 import { ServiceManager } from '../manager/serviceManager';
 import { CommandManager } from '../manager/commandManager';
@@ -40,10 +40,12 @@ export class SuzukazeTenso implements IBot {
             this.logger.info('started...');
         });
 
-
         this.client.on('message', async message => {
-        
             if (!message.author.bot) {
+                return;
+            }
+            const check = await this.serviceManager.execute(message);
+            if(check != ServiceExecuteResultType.CLEAR){
                 this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
                 this.commandManager.execute(message).then((success) => {
                     this.logger.debug(`Execute Done`);
