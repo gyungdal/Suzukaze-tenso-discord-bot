@@ -1,7 +1,7 @@
 import { BaseService } from "../base/baseService";
 import { Message } from "discord.js";
 import { BotMessage } from "../struct/message";
-import { IBot, ServiceExecuteResultType } from "../struct/api";
+import { IBot } from "../struct/api";
 
 export class Say extends BaseService {
     constructor(bot : IBot){
@@ -10,12 +10,11 @@ export class Say extends BaseService {
         this._priority = 50;
     }
 
-    async execute(msg : Message) : Promise<ServiceExecuteResultType> {
+    async execute(msg : Message){
         const reply = await msg.reply(`SAY : ${msg.content}`);
         setTimeout(()=>{
             msg.channel.bulkDelete([msg, reply]);
         }, 1000);
-        return Promise.resolve(ServiceExecuteResultType.CLEAR);
     }
 
     isValid(msg : Message) : boolean {

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { join } from "path";
 import { Client } from "discord.js";
-import { ServiceExecuteResultType, IServiceManager, ICommandManager, IBot, ICommand, IConfig, ILogger, IService } from "../struct/api";
+import { IServiceManager, ICommandManager, IBot, ICommand, IConfig, ILogger, IService } from "../struct/api";
 import { readdirSync, lstatSync } from "fs";
 import { ServiceManager } from '../manager/serviceManager';
 import { CommandManager } from '../manager/commandManager';
@@ -47,18 +47,14 @@ export class SuzukazeTenso implements IBot {
             if(message.author.id === this.client.user.id){
                 return;
             }
-            const check = await this.serviceManager.execute(message);
-            if(check != ServiceExecuteResultType.CLEAR){
-                this.logger.info("execute command");
-                this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
-                this.commandManager.execute(message).then((success) => {
-                    this.logger.debug(`Execute Done`);
-                }, (reject) => {
-                    this.logger.error(`Execute Error\n\tㄴ${reject}`);
-                });
-            }else{
-                this.logger.info("Clear");
-            }
+            this.logger.info("execute command");
+            this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
+            this.commandManager.execute(message).then((success) => {
+                this.logger.debug(`Execute Done`);
+            }, (reject) => {
+                this.logger.error(`Execute Error\n\tㄴ${reject}`);
+            });
+            this.serviceManager.execute(message);
         });
 
         this.client.login(this.config.token).then((value)=>{

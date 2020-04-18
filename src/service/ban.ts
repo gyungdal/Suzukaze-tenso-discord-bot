@@ -1,6 +1,6 @@
 import { BaseService } from "../base/baseService";
 import { Message } from "discord.js";
-import { IBot, ServiceExecuteResultType } from "../struct/api";
+import { IBot } from "../struct/api";
 
 export class Ban extends BaseService {
     constructor(bot : IBot){
@@ -9,13 +9,12 @@ export class Ban extends BaseService {
         this._priority = 100;
     }
 
-    async execute(msg : Message) : Promise<ServiceExecuteResultType> {
+    async execute(msg : Message)  {
         if(this.argv.includes(msg.author.id)){
             if(msg.deletable){
                 await msg.delete();
             }
         }
-        return Promise.resolve(ServiceExecuteResultType.CLEAR);
     }
 
     isValid(msg : Message) : boolean {

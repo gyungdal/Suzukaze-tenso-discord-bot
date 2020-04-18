@@ -2,7 +2,6 @@ import { readdirSync, lstatSync } from "fs";
 import { join } from "path";
 import { IService, IServiceManager } from "../struct/api";
 import { IBot } from "../struct/api";
-import { ServiceExecuteResultType } from "../struct/api";
 import { Message } from "discord.js";
 import { isUndefined } from "util";
 
@@ -59,14 +58,12 @@ export class ServiceManager implements IServiceManager {
         }
     }
     
-    async execute(msg: Message): Promise<ServiceExecuteResultType>{
+    async execute(msg: Message) {
         const serv = this.service.find(service => service.isValid(msg));
         if(!isUndefined(serv)){
             this.bot.logger.debug("find service");
             return serv.execute(msg);
         }
-        else
-            return Promise.resolve(ServiceExecuteResultType.NEED_EXECUTE_COMMAND);
           
     }
 }
