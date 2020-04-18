@@ -17,10 +17,9 @@ export interface ILogger {
 export interface IConfig {
     id: string;
     token: string;
-    commands: string[];
     game: string;
     userName: string;
-    denyAnswer: string;
+    adminId: string[];
 }
 
 export enum CommandType {

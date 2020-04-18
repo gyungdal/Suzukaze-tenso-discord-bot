@@ -21,8 +21,7 @@ export class I2X implements ICommand {
             if(msg.content.split(' ').length < 2){
                 return false;
             }
-            const check = msg.content.split(' ')[1].toLowerCase()
-                 === this.help.command;
+            const check = msg.content.split(' ').includes(this.help.command);
             this.bot.logger.info(`${this.help.command} : ${check}`);
             return check;
         }

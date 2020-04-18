@@ -11,13 +11,14 @@ const logger : ILogger =  {
     warn: console.warn,
     info: console.log
 };
+console.log(process.env.ADMIN_ID);
+const admin = process.env.ADMIN_ID?.split(',').filter(value => value.length > 3);
 const config : IConfig = {
     id: process.env.DISCORD_CLIENT_ID || "NOP",
     token: process.env.DISCORD_SECRET || "NOP",
-    commands: [],
     game: "",
     userName: "",
-    denyAnswer: process.env.DENY_ANSWER || "NOP"
+    adminId: admin?.map(value => value.trim()) || [""]
 };
 const tenso = new SuzukazeTenso(logger, config);
 tenso.start();

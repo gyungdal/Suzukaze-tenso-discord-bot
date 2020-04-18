@@ -22,10 +22,10 @@ export class SystemLoad implements ICommand {
             if(msg.content.split(' ').length < 2){
                 return false;
             }
-            const check = msg.content.split(' ')[1].toLowerCase()
-                 === this.help.command;
+            const check = msg.content.split(' ').includes(this.help.command);
+            const userCheck = this.bot.config.adminId.includes(msg.author.id);
             this.bot.logger.info(`${this.help.command} : ${check}`);
-            return check;
+            return check && userCheck;
         }
         return false;
     }

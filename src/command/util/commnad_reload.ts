@@ -5,10 +5,7 @@ import { config } from "dotenv";
 import { join } from "path";
 export class CommandReload implements ICommand {
     public readonly bot: IBot;
-    private readonly authUser : string[];
     constructor(bot: IBot) {
-        config({ path: join(__dirname, "..", "..", "bot", '.env.suzukaze_tenso') });
-        this.authUser = (process.env.ADMIN_ID || "253024615285129227").split(',');
         this.bot = bot;
     }
 
@@ -25,9 +22,8 @@ export class CommandReload implements ICommand {
             if(msg.content.split(' ').length < 2){
                 return false;
             }
-            const check = msg.content.split(' ')[1].toLowerCase()
-                 === this.help.command;
-            const userCheck = this.authUser.includes(msg.author.id);
+            const check = msg.content.split(' ').includes(this.help.command);
+            const userCheck = this.bot.config.adminId.includes(msg.author.id);
             this.bot.logger.info(`${this.help.command} : ${check}, ${userCheck}`);
             
             return (check && userCheck);
