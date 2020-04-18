@@ -18,6 +18,7 @@ export class ServiceManager implements IServiceManager {
         }
         return Promise.resolve(service);
     }
+
     public add(dirPath: string): Promise<boolean> {
         try {
             const fileList = readdirSync(dirPath);
@@ -35,6 +36,7 @@ export class ServiceManager implements IServiceManager {
                     });
                 }
             });
+            this.service.sort((a, b) => a.priority - b.priority);
             return Promise.resolve(true);
         } catch (e) {
             return Promise.reject(e);

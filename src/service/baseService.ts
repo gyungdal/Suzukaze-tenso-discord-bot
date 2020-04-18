@@ -1,17 +1,20 @@
 import { IBot, ICommand, IMessage, ICommandDescription, CommandType, IService } from "../struct/api";
 import { Message } from "discord.js";
 import { BotMessage } from "../struct/message";
-import { ServiceStatus } from "../struct/api";
 
 export class BaseService implements IService {
     protected _name : string;
     private _argv : Array<string>;
-    private _status: ServiceStatus;
+    protected _priority: number;
 
     constructor(){
         this._argv = new Array();
-        this._status = ServiceStatus.STOP;
         this._name = "";
+        this._priority = 999;
+    }
+
+    public get priority() : number { 
+        return this._priority;
     }
 
     public get name() : string { 
@@ -20,10 +23,6 @@ export class BaseService implements IService {
     public get argv() : Array<string> {
         return this._argv;
     }
-    public get status() : ServiceStatus{
-        return this._status;
-    }
-
     addOrSetArgv(arg: string): void {
         if(!this._argv.includes(arg)){
             this._argv.push(arg);
@@ -37,14 +36,4 @@ export class BaseService implements IService {
     execute(msg : Message) : Promise<boolean>{
         throw new Error("Method not implemented.");
     }
-    start(): ServiceStatus {
-        this._status = ServiceStatus.RUNNING;
-        return this.status;
-    }
-    stop(): ServiceStatus {
-        this._status = ServiceStatus.STOP;
-        return this.status;
-    }
-
-    
 }

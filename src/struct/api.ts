@@ -74,19 +74,13 @@ export interface IUser {
     tag: string;
 }
 
-export enum ServiceStatus{
-    RUNNING,
-    STOP
-};
 export interface IService {
     readonly name : string;
     readonly argv : Array<string>;
-    readonly status : ServiceStatus;
+    readonly priority : number;
     addOrSetArgv(arg : string) : void;
     removeArgv(arg : string) : void;
     execute(msg : Message) : Promise<Boolean>;
-    start() : ServiceStatus;
-    stop() : ServiceStatus;
 }
 
 export type MessageColor =

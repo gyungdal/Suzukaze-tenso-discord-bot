@@ -5,6 +5,7 @@ export class Ban extends BaseService {
     constructor(){
         super();
         this._name = "ban";
+        this._priority = 100;
     }
 
     execute(msg : Message) : Promise<boolean> {

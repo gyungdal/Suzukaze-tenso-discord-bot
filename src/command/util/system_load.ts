@@ -37,7 +37,7 @@ export class SystemLoad implements ICommand {
         message.addField("cpu", cpus().pop()?.model ?? "No support");
         message.addField("arch", arch());
         message.addField("release", release());
-        message.addField("freemem", freemem().toString());
+        message.addField("freemem", `${freemem() / 1024.0 / 1024} GB`);
         message.addField("loadavg", loadavg().toString());
         return message.sendReply()
             .then((resolve) => {

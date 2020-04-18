@@ -39,6 +39,7 @@ export class SuzukazeTenso implements IBot {
             this.logger.info('started...');
         });
 
+
         this.client.on('message', message => {
             if (!message.author.bot) {
                 this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
