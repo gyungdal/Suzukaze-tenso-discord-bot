@@ -49,12 +49,15 @@ export class SuzukazeTenso implements IBot {
             }
             const check = await this.serviceManager.execute(message);
             if(check != ServiceExecuteResultType.CLEAR){
+                this.logger.info("execute command");
                 this.logger.debug(`[${message.author.tag}] ${message.cleanContent}`);
                 this.commandManager.execute(message).then((success) => {
                     this.logger.debug(`Execute Done`);
                 }, (reject) => {
                     this.logger.error(`Execute Error\n\tㄴ${reject}`);
                 });
+            }else{
+                this.logger.info("Clear");
             }
         });
 
