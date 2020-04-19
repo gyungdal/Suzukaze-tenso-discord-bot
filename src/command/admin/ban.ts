@@ -9,7 +9,7 @@ export class Ban implements ICommand {
 
     get help(): ICommandDescription {
         return {
-            type: CommandType.TEST,
+            type: CommandType.ADMIN,
             command: "ban",
             desc: '메세지 제거'
         }

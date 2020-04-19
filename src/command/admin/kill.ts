@@ -10,7 +10,7 @@ export class Ban implements ICommand {
 
     get help(): ICommandDescription {
         return {
-            type: CommandType.TEST,
+            type: CommandType.ADMIN,
             command: "kill",
             desc: 'tenso 종료'
         }

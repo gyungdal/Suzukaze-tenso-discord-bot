@@ -11,10 +11,14 @@ export class Say extends BaseService {
     }
 
     async execute(msg : Message){
-        const reply = await msg.reply(`SAY : ${msg.content}`);
-        setTimeout(()=>{
-            msg.channel.bulkDelete([msg, reply]);
-        }, 1000);
+        if (msg.member.voiceChannel.joinable || msg.member.voiceChannel.speakable) {
+          const connection = await msg.member.voiceChannel.join();
+        } else {
+            msg.reply('You need to join a voice channel first!');
+        }
+        if(msg.deletable){
+            msg.delete();
+        }
     }
 
     isValid(msg : Message) : boolean {
